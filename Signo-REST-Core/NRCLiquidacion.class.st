@@ -64,7 +64,7 @@ NRCLiquidacion >> modelo [
 
 { #category : #accessing }
 NRCLiquidacion >> numeroJustificante [
-	^ numeroJustificante
+	^ (numeroJustificante copyFrom: 1 to: 12), '0'
 ]
 
 { #category : #accessing }

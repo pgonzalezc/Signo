@@ -28,9 +28,10 @@ TGeneradorNrcs >> digitoDeControl [
 TGeneradorNrcs >> digitoDeControl: numeroJustificante [
 
 	"Dígito de control. Posición 13"
-	| justificante12 |
+	| justificante12 dc |
 	justificante12 := (self numeroJustificante copyFrom: 1 to: 12) asInteger.
-	^ (7 - (justificante12 % 7)) asString
+	dc := 7 - (justificante12 % 7).
+	^ dc = 0 ifTrue: [ 0 ] ifFalse: [ dc asString ]
 ]
 
 { #category : #'as yet unclassified' }
