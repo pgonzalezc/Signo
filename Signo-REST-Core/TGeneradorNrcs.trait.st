@@ -4,10 +4,28 @@ Trait {
 }
 
 { #category : #'as yet unclassified' }
-TGeneradorNrcs >> caracterDeControl [
+TGeneradorNrcs classSide >> generaCaracteresAleatorios: longitud [
+
+	| alfabeto random resp|
+	alfabeto := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'.
+	resp := ''.
+	random := Random new.
+	longitud timesRepeat: [ resp := resp, ((alfabeto at: (random next * 32 + 1) asInteger) asString) ].
+	^ resp
+]
+
+{ #category : #'as yet unclassified' }
+TGeneradorNrcs >> caracterDeControl: from [
 
 	"Caracter de control. Posición 13"
-	^ ''
+	| numeroJustificante origenDigitoControl13 |
+	numeroJustificante := from.
+	(numeroJustificante at: 12) isLetter 
+		ifTrue: [ 
+			origenDigitoControl13 := numeroJustificante copyFrom: 1 to: 12.
+			numeroJustificante := origenDigitoControl13, (self digitoDeControl: origenDigitoControl13)
+		].
+	^ 'CRSAEZKJQBFPNDWMXTY' at: (19 - (numeroJustificante asInteger % 19))
 ]
 
 { #category : #'as yet unclassified' }
@@ -18,10 +36,13 @@ TGeneradorNrcs >> caracterDeControlComplementario [
 ]
 
 { #category : #'as yet unclassified' }
-TGeneradorNrcs >> digitoDeControl [
+TGeneradorNrcs >> caracterDeControlComplementario: from importe: unImporte [
 
-	"Dígito de control. Posición 13"
-	^ '$'
+	"Caracter de control complementario. Posición 14"
+	| suma |
+	suma := (from copyFrom: 1 to: 12) asInteger + ((unImporte * 100.0) round: 0).
+	^ 'TRWAGMYFPDXBNJZSQVHLCKE' at: (suma % 23)
+
 ]
 
 { #category : #'as yet unclassified' }
@@ -38,16 +59,19 @@ TGeneradorNrcs >> digitoDeControl: numeroJustificante [
 TGeneradorNrcs >> numeroSecuencial: longitud [
 
 	| ahora diaJuliano ejercicio|
+	(longitud < 5)
+		ifTrue: [ NRCErrores e110longitudNumeroSecuencia signal ].
 	ahora := DateAndTime now.
-	diaJuliano := ahora julianDayNumber.
+	diaJuliano := ahora dayOfYear.
 	ejercicio := ahora year % 1000.
-	^ (diaJuliano asString , ejercicio asString) padRightTo: longitud with: $0
+	^ (ejercicio asString, diaJuliano asString) padRightTo: longitud with: $0
 ]
 
 { #category : #'as yet unclassified' }
 TGeneradorNrcs >> obtenerComplemento [
-
-	^ 'ABCDEFG'
+	
+	"genera siete caracteres aleatorios"
+	^ TGeneradorNrcs generaCaracteresAleatorios: 7
 ]
 
 { #category : #'as yet unclassified' }
@@ -64,5 +88,8 @@ TGeneradorNrcs >> obtenerNumeroReferencia [
 
 { #category : #'as yet unclassified' }
 TGeneradorNrcs >> obtenerNumeroReferenciaCompleto [
-	^ self obtenerNumeroReferencia, self obtenerComplemento 
+
+	| preNumeroCompleto |
+	preNumeroCompleto := self obtenerNumeroReferencia, self obtenerComplemento.
+	^ preNumeroCompleto, ((NRCCrc crc5: preNumeroCompleto) asString )
 ]

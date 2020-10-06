@@ -81,3 +81,17 @@ NRCErrores class >> e110FechaFormatoIncorrecto [
 	"110 - Fecha {1} con formato incorrecto. El formato debe ser YYYY-MM-DD HH:MM:SS"
 	^ NRCError codigo: 110 descripcion: 'Fecha {1} con formato incorrecto. El formato debe ser YYYY-MM-DD HH:MM:SS'
 ]
+
+{ #category : #'as yet unclassified' }
+NRCErrores class >> e110longitudNumeroSecuencia [
+
+	"110 - Longitud de número secuencial menor de cinco. Debe ser superior a 4"
+	^ NRCError codigo: 110 descripcion: 'Longitud de número secuencial menor de cinco. Debe ser 5 o superior'
+]
+
+{ #category : #'as yet unclassified' }
+NRCErrores class >> e111numeroJustificanteInvalido [
+
+	"111 - Número de justificante invalido. Digito de control incorrecto"
+	^ NRCError codigo: 111 descripcion: 'Número de justificante {1} invalido. Digito de control incorrecto'.
+]

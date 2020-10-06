@@ -29,11 +29,11 @@ NRCAutoliquidacion >> initializeWith: requestData [
 { #category : #accessing }
 NRCAutoliquidacion >> numeroJustificante [ 
 
-	^ self modelo, self entidad, (self numeroSecuencial: 6)
+	^ self modelo, self entidad, (self numeroSecuencial: 5)
 ]
 
 { #category : #'as yet unclassified' }
 NRCAutoliquidacion >> obtenerNumeroReferencia [
 
-	^ '444456789012', (self digitoDeControl: self numeroJustificante) , self caracterDeControlComplementario 
+	^ self numeroJustificante, (self digitoDeControl: self numeroJustificante) , self caracterDeControlComplementario 
 ]
